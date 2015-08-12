@@ -56,7 +56,10 @@ class Loader(object):
     self.modules[parent_name] = SymbolTable(parent)
 
     for include in parent.includes:
-      real_path = os.path.join(os.path.dirname(real_root), include.path.value)
+      # Hack: Since the included files could be anywhere,
+      # we only care about the thrift file name and assume that all
+      # the files are in the same directory.
+      real_path = os.path.join(os.path.dirname(real_root), os.path.basename(include.path.value))
       self.process(real_path)
 
   def dump(self):
